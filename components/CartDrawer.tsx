@@ -56,7 +56,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
               <div className="space-y-8">
                 {items.map((item) => (
                   <motion.div
-                    key={`${item.id}-${item.color}-${item.size}`}
+                    key={`${item.productId}-${item.color}-${item.size}`}
                     layout
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -66,7 +66,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
                     <div className="relative w-24 h-32 rounded-xl overflow-hidden bg-muted border border-white/5">
                       <Image
                         src={item.image}
-                        alt={item.name}
+                        alt={item.productName}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
                       />
@@ -75,10 +75,10 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
                       <div>
                         <div className="flex justify-between items-start">
                           <h4 className="text-sm font-black uppercase tracking-tight text-white group-hover:text-accent transition-colors">
-                            {item.name}
+                            {item.productName}
                           </h4>
                           <button 
-                            onClick={() => removeItem(item.id, item.color, item.size)}
+                            onClick={() => removeItem(item.productId, item.color, item.size)}
                             className="text-white/20 hover:text-white transition-colors"
                           >
                             <X size={16} />
@@ -91,14 +91,14 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
                       <div className="flex justify-between items-end">
                         <div className="flex items-center border border-white/10 rounded-lg overflow-hidden h-8">
                           <button
-                            onClick={() => updateQuantity(item.id, item.color, item.size, item.quantity - 1)}
+                            onClick={() => updateQuantity(item.productId, item.color, item.size, item.quantity - 1)}
                             className="px-2 hover:bg-white/5 transition-colors"
                           >
                             <Minus size={12} />
                           </button>
                           <span className="w-8 text-center text-xs font-black">{item.quantity}</span>
                           <button
-                            onClick={() => updateQuantity(item.id, item.color, item.size, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.productId, item.color, item.size, item.quantity + 1)}
                             className="px-2 hover:bg-white/5 transition-colors"
                           >
                             <Plus size={12} />
