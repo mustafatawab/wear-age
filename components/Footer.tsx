@@ -15,6 +15,10 @@ export function Footer() {
               <p className="text-white/40 text-xs font-bold tracking-[0.2em] uppercase max-w-sm leading-loose">
                 Engineering high-performance aesthetics for the modern man. Est. 2026.
               </p>
+              <div className="pt-2">
+                <p className="text-[10px] font-black tracking-[0.3em] uppercase text-white/20">Location</p>
+                <p className="text-[11px] font-bold tracking-widest uppercase text-white/60">Gulberg Green, Islamabad</p>
+              </div>
             </div>
             
             <div className="flex gap-8">
@@ -72,7 +76,7 @@ export function Footer() {
             &copy; 2026 WEAR AGE. REFINING THE FUTURE.
           </p>
           <div className="flex gap-10">
-            <span className="text-[10px] font-black tracking-widest uppercase text-white/20">United Kingdom / GBP</span>
+            <span className="text-[10px] font-black tracking-widest uppercase text-white/20">Pakistan / PKR</span>
             <span className="text-[10px] font-black tracking-widest uppercase text-white/20">Global Shipping Available</span>
           </div>
         </div>
