@@ -4,10 +4,15 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
   },
   allowedDevOrigins: [
-    'vm-6hhyljlblaznrta7xb2dkzg7.vusercontent.net',
+    'vm-6hhyljlblaznrta7.vusercontent.net',
     'localhost:3000',
   ],
 }

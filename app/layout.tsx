@@ -1,21 +1,29 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Syne, Instrument_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CartProvider } from '@/app/context/CartContext'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const syne = Syne({ 
+  subsets: ['latin'],
+  variable: '--font-display',
+  display: 'swap',
+})
+
+const instrumentSans = Instrument_Sans({ 
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
-  title: 'Wear Age - Premium Fashion for Every Era',
-  description: 'Discover timeless style with Wear Age. Curated collections of premium apparel blending classic elegance with modern aesthetics.',
-  generator: 'v0.app',
+  title: 'Wear Age — Engineered for the Modern Era',
+  description: 'Premium menswear where architectural precision meets everyday comfort. Curated collections designed for those who lead.',
   openGraph: {
-    title: 'Wear Age - Premium Fashion',
-    description: 'Discover timeless style with Wear Age',
+    title: 'Wear Age — Premium Fashion',
+    description: 'Engineered for the modern era',
     type: 'website',
   },
 }
@@ -26,8 +34,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="bg-background">
-      <body className="font-sans antialiased bg-background text-foreground flex flex-col min-h-screen">
+    <html lang="en" className={`${syne.variable} ${instrumentSans.variable}`}>
+      <body className="antialiased bg-background text-foreground flex flex-col min-h-screen">
         <CartProvider>
           <Header />
           <div className="flex-1">

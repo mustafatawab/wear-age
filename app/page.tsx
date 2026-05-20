@@ -2,242 +2,348 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Button } from '@/components/ui/button'
 import { ProductCard } from '@/components/ProductCard'
 import { products } from '@/lib/products'
-import { ArrowRight, ChevronDown } from 'lucide-react'
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { ArrowRight } from 'lucide-react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 
 export default function HomePage() {
   const featuredProducts = products.slice(0, 6)
   const newArrivals = products.filter((p) => p.badge === 'New').slice(0, 4)
-  
-  const containerRef = useRef(null)
+  const bestsellers = products.filter((p) => p.badge === 'Bestseller').slice(0, 4)
+
+  const heroRef = useRef(null)
   const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
+    target: heroRef,
+    offset: ['start start', 'end start'],
   })
 
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, 300])
-  const imageY = useTransform(scrollYProgress, [0, 1], [0, -100])
+  const y = useTransform(scrollYProgress, [0, 1], [0, 120])
+  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
 
-  const headlineLines = ["OWN THE", "FUTURE", "OF STYLE"]
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08, delayChildren: 0.2 },
+    },
+  }
+
+  const staggerItem = {
+    hidden: { opacity: 0, y: 24 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+  }
 
   return (
-    <main className="min-h-screen bg-[#0B0B0F]">
-      {/* Asymmetrical Hero Section */}
-      <section 
-        ref={containerRef}
-        className="relative min-h-[100svh] lg:h-[100vh] flex items-center overflow-hidden pt-20"
-      >
-        <div className="container mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-20">
-          
-          {/* Left: Oversized Typography */}
-          <div className="lg:col-span-7 space-y-8">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-accent/20 bg-accent/5 backdrop-blur-xl"
-            >
-              <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              <span className="text-[10px] font-black tracking-[0.3em] uppercase text-accent">New Era Collection</span>
+    <main className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden pt-20">
+        {/* Background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-secondary/30 via-background to-background" />
+
+        {/* Decorative Line */}
+        <div className="absolute top-32 left-4 sm:left-6 lg:left-8 w-px h-20 bg-border hidden sm:block" />
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+            className="max-w-3xl"
+          >
+            {/* Eyebrow */}
+            <motion.div variants={staggerItem} className="flex items-center gap-3 mb-6 sm:mb-8">
+              <span className="w-6 sm:w-8 h-px bg-accent" />
+              <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-accent">
+                Spring / Summer 2026
+              </span>
             </motion.div>
 
-            <div className="space-y-2">
-              {headlineLines.map((line, i) => (
-                <div key={i} className="overflow-hidden">
-                  <motion.h1
-                    initial={{ y: "100%" }}
-                    animate={{ y: 0 }}
-                    transition={{ delay: 0.2 + i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    className={`text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] font-black leading-[0.85] tracking-tighter uppercase ${
-                      i === 1 ? 'text-gradient-neon' : 'text-white'
-                    }`}
-                  >
-                    {line}
-                  </motion.h1>
-                </div>
-              ))}
-            </div>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-              className="text-lg md:text-xl text-white/50 max-w-xl font-light leading-relaxed"
+            {/* Headline */}
+            <motion.h1
+              variants={staggerItem}
+              className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95] text-foreground mb-6 sm:mb-8"
             >
-              Experience the convergence of high-fashion and futuristic engineering. 
-              Designed for those who lead, not follow.
+              Engineered
+              <br />
+              <span className="text-muted-foreground">for the</span>
+              <br />
+              modern era
+            </motion.h1>
+
+            {/* Subtext */}
+            <motion.p
+              variants={staggerItem}
+              className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed mb-8 sm:mb-12"
+            >
+              Premium menswear where architectural precision meets everyday comfort. Designed for those who lead, not follow.
             </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1, duration: 0.6 }}
-              className="flex flex-col sm:flex-row gap-6 pt-4"
-            >
-              <Button
-                asChild
-                size="lg"
-                className="group relative h-16 px-10 bg-white text-black hover:bg-white/90 transition-all duration-500 rounded-none button-glow"
+            {/* CTA */}
+            <motion.div variants={staggerItem} className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/products"
+                className="group inline-flex items-center justify-center gap-2 bg-foreground text-white px-6 sm:px-8 py-3.5 sm:py-4 text-[10px] sm:text-xs font-semibold tracking-[0.15em] uppercase rounded-sm hover:bg-foreground/90 transition-colors"
               >
-                <Link href="/products" className="flex items-center gap-3">
-                  <span className="font-black tracking-[0.2em] text-xs">EXPLORE COLLECTION</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" />
-                </Link>
-              </Button>
+                Explore Collection
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link
+                href="/products?category=jackets"
+                className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 text-[10px] sm:text-xs font-semibold tracking-[0.15em] uppercase text-foreground border border-border rounded-sm hover:border-foreground/30 transition-colors"
+              >
+                View Outerwear
+              </Link>
             </motion.div>
-          </div>
-
-          {/* Right: Full-height Model Image */}
-          <div className="lg:col-span-5 relative h-[60vh] lg:h-[90vh]">
-            <motion.div 
-              style={{ y: imageY }}
-              className="absolute inset-0 z-10"
-            >
-              <div className="relative h-full w-full overflow-hidden rounded-2xl border border-white/5 shadow-2xl">
-                 <Image 
-                  src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2000&auto=format&fit=crop"
-                  alt="High Fashion Model"
-                  fill
-                  className="object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-transparent to-transparent opacity-60" />
-              </div>
-
-              {/* Floating UI Elements */}
-              <motion.div
-                animate={{ y: [0, -20, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-6 -right-6 z-20 bg-white text-black p-6 rounded-2xl shadow-2xl border border-white/10 backdrop-blur-xl"
-              >
-                <p className="text-[10px] font-black tracking-widest uppercase mb-1">Limited Drop</p>
-                <p className="text-2xl font-black tracking-tighter">04 / 50</p>
-              </motion.div>
-
-              <motion.div
-                animate={{ y: [0, 20, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute bottom-20 -left-10 z-20 bg-accent p-4 rounded-xl shadow-2xl"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden relative">
-                    <Image src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop" alt="User" fill className="object-cover" />
-                  </div>
-                  <div>
-                    <p className="text-[8px] font-bold text-black/60 uppercase">Recently Purchased</p>
-                    <p className="text-xs font-black text-black">Minimal Crew Neck</p>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            {/* Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/20 rounded-full blur-[120px] -z-10 animate-pulse" />
-          </div>
+          </motion.div>
         </div>
 
-        {/* Marquee Text Strip */}
-        <div className="absolute bottom-0 left-0 right-0 py-8 bg-accent/5 border-y border-white/5 overflow-hidden z-30 backdrop-blur-md">
-          <div className="flex whitespace-nowrap animate-marquee">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="flex items-center gap-12 px-6">
-                <span className="text-2xl font-black tracking-tighter text-white/20 uppercase">Wear Age — Future Streetwear</span>
-                <span className="w-2 h-2 rounded-full bg-accent" />
-                <span className="text-2xl font-black tracking-tighter text-white/20 uppercase">Redefining Aesthetics</span>
-                <span className="w-2 h-2 rounded-full bg-accent-purple" />
-              </div>
+        {/* Hero Image */}
+        <motion.div
+          style={{ y, opacity }}
+          className="absolute right-0 top-1/2 -translate-y-1/2 w-[45%] sm:w-[40%] lg:w-[35%] h-[60vh] sm:h-[70vh] hidden md:block"
+        >
+          <div className="relative h-full w-full overflow-hidden rounded-sm">
+            <Image
+              src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=1200&q=80"
+              alt="Wear Age Collection"
+              fill
+              sizes="(max-width: 768px) 40vw, 35vw"
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background/50" />
+          </div>
+        </motion.div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 0.6 }}
+          className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        >
+          <span className="text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Scroll</span>
+          <div className="w-px h-6 sm:h-8 bg-border relative overflow-hidden">
+            <motion.div
+              animate={{ y: [-12, 12] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute top-0 left-0 w-full h-3 sm:h-4 bg-accent"
+            />
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Marquee */}
+      <section className="py-5 sm:py-6 border-y border-border overflow-hidden bg-white">
+        <div className="flex whitespace-nowrap animate-marquee">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex items-center gap-6 sm:gap-8 px-4 sm:px-6">
+              <span className="text-[10px] sm:text-sm font-medium tracking-[0.15em] uppercase text-muted-foreground/60">
+                Premium Quality
+              </span>
+              <span className="w-1 h-1 rounded-full bg-accent" />
+              <span className="text-[10px] sm:text-sm font-medium tracking-[0.15em] uppercase text-muted-foreground/60">
+                Free Shipping
+              </span>
+              <span className="w-1 h-1 rounded-full bg-accent" />
+              <span className="text-[10px] sm:text-sm font-medium tracking-[0.15em] uppercase text-muted-foreground/60">
+                Sustainable Materials
+              </span>
+              <span className="w-1 h-1 rounded-full bg-accent" />
+              <span className="text-[10px] sm:text-sm font-medium tracking-[0.15em] uppercase text-muted-foreground/60">
+                30-Day Returns
+              </span>
+              <span className="w-1 h-1 rounded-full bg-accent" />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Featured Products */}
+      <section className="py-16 sm:py-24 lg:py-32">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 sm:mb-16 gap-6">
+            <div>
+              <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-accent">Curated</span>
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mt-2 sm:mt-3">
+                Featured Pieces
+              </h2>
+            </div>
+            <Link
+              href="/products"
+              className="group inline-flex items-center gap-2 text-[10px] sm:text-xs font-semibold tracking-[0.15em] uppercase text-foreground/60 hover:text-foreground transition-colors"
+            >
+              View All
+              <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 sm:gap-x-8 gap-y-10 sm:gap-y-14">
+            {featuredProducts.map((product, idx) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 32 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ delay: idx * 0.08, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <ProductCard product={product} />
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Grid of Featured Products */}
-      <section className="py-32 container mx-auto px-6 lg:px-12">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-4">
-              The <span className="text-gradient-neon">Curated</span> <br /> Selection
-            </h2>
-            <p className="text-white/40 max-w-sm uppercase text-[10px] font-bold tracking-[0.2em]">High-performance essentials engineered for the modern aesthetic.</p>
-          </motion.div>
-          
-          <Link href="/products" className="group flex items-center gap-4 text-xs font-black tracking-[0.3em] uppercase hover:text-accent transition-colors">
-            View All Products
-            <div className="p-3 rounded-full border border-white/10 group-hover:border-accent group-hover:bg-accent group-hover:text-black transition-all">
-              <ArrowRight size={20} />
-            </div>
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
-          {featuredProducts.map((product, idx) => (
-            <motion.div 
-              key={product.id}
-              initial={{ opacity: 0, y: 50 }}
+      {/* Editorial Banner */}
+      <section className="py-16 sm:py-24 lg:py-32 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-20 items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
+              transition={{ duration: 0.6 }}
+              className="relative aspect-[4/5] rounded-sm overflow-hidden"
             >
-              <ProductCard product={product} />
+              <Image
+                src="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=1000&q=80"
+                alt="Wear Age Editorial"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
+              />
             </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Horizontal Scroll Showcase (Placeholder) */}
-      <section className="py-32 bg-accent/5 overflow-hidden">
-        <div className="container mx-auto px-6 lg:px-12 mb-16">
-           <h3 className="text-3xl font-black uppercase tracking-tighter">New Arrivals</h3>
-        </div>
-        <div className="flex gap-8 px-6 lg:px-12 overflow-x-auto pb-12 no-scrollbar">
-          {newArrivals.map((product) => (
-            <div key={product.id} className="min-w-[300px] md:min-w-[400px]">
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Brand Statement */}
-      <section className="py-40 bg-black relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-accent-purple/5 rounded-full blur-[150px] translate-x-1/2 -translate-y-1/2" />
-        <div className="container mx-auto px-6 lg:px-12 text-center relative z-10">
-          <motion.h2 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="text-6xl md:text-9xl font-black tracking-tighter uppercase mb-12"
-          >
-            We are <br /> <span className="stroke-text opacity-30">Wear Age</span>
-          </motion.h2>
-          <p className="text-xl md:text-3xl font-light text-white/40 max-w-3xl mx-auto leading-relaxed mb-16">
-            Pushing the boundaries of garment construction and digital style. Our mission is to engineer the wardrobe of the future.
-          </p>
-          <div className="flex justify-center gap-12 md:gap-24">
-            <div>
-              <p className="text-4xl md:text-6xl font-black mb-2">10k+</p>
-              <p className="text-[10px] font-black tracking-[0.3em] text-accent uppercase">Members</p>
-            </div>
-            <div>
-              <p className="text-4xl md:text-6xl font-black mb-2">50+</p>
-              <p className="text-[10px] font-black tracking-[0.3em] text-accent-purple uppercase">Drops</p>
-            </div>
-            <div>
-              <p className="text-4xl md:text-6xl font-black mb-2">2026</p>
-              <p className="text-[10px] font-black tracking-[0.3em] text-white uppercase">Founded</p>
+            <div className="space-y-6 sm:space-y-8">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1, duration: 0.6 }}
+              >
+                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-accent">Philosophy</span>
+                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.05] mt-2 sm:mt-3">
+                  Less noise,
+                  <br />
+                  more intention
+                </h2>
+              </motion.div>
+              <motion.p
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.15, duration: 0.6 }}
+                className="text-muted-foreground leading-relaxed max-w-md text-sm sm:text-base"
+              >
+                Every piece in our collection is designed with purpose. We strip away the unnecessary and focus on what matters: premium materials, precise construction, and timeless silhouettes that work as hard as you do.
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                className="grid grid-cols-3 gap-6 sm:gap-8 pt-6 sm:pt-8 border-t border-border"
+              >
+                <div>
+                  <p className="font-display text-2xl sm:text-3xl font-bold text-foreground">10k+</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">Members</p>
+                </div>
+                <div>
+                  <p className="font-display text-2xl sm:text-3xl font-bold text-foreground">50+</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">Drops</p>
+                </div>
+                <div>
+                  <p className="font-display text-2xl sm:text-3xl font-bold text-foreground">2026</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">Founded</p>
+                </div>
+              </motion.div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* New Arrivals */}
+      <section className="py-16 sm:py-24 lg:py-32">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-12 sm:mb-16">
+            <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-accent">Just Landed</span>
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mt-2 sm:mt-3">
+              New Arrivals
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-8 sm:gap-y-10">
+            {newArrivals.map((product, idx) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 32 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ delay: idx * 0.06, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <ProductCard product={product} />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Bestsellers */}
+      <section className="py-16 sm:py-24 lg:py-32 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-12 sm:mb-16">
+            <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-accent">Most Popular</span>
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mt-2 sm:mt-3">
+              Bestsellers
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-8 sm:gap-y-10">
+            {bestsellers.map((product, idx) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 32 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ delay: idx * 0.06, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <ProductCard product={product} />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 sm:py-24 lg:py-32 bg-foreground text-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-2xl mx-auto space-y-6 sm:space-y-8"
+          >
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05]">
+              Join the movement
+            </h2>
+            <p className="text-white/60 text-base sm:text-lg leading-relaxed">
+              Get early access to new drops, exclusive offers, and style insights delivered to your inbox.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto pt-2 sm:pt-4">
+              <input
+                type="email"
+                placeholder="Your email"
+                className="flex-1 px-4 sm:px-5 py-3 sm:py-4 bg-white/10 border border-white/20 text-white placeholder:text-white/40 text-sm rounded-sm focus:outline-none focus:border-accent transition-colors"
+              />
+              <button className="px-6 sm:px-8 py-3 sm:py-4 bg-accent text-white text-[10px] sm:text-xs font-semibold tracking-[0.15em] uppercase rounded-sm hover:bg-accent/90 transition-colors whitespace-nowrap">
+                Subscribe
+              </button>
+            </div>
+          </motion.div>
         </div>
       </section>
     </main>
   )
 }
-
-
